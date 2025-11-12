@@ -1,47 +1,18 @@
 <?php require_once dirname(__FILE__) . '/../config.php'; ?>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html lang="pl">
-<head>
-    <meta charset="utf-8" />
+  <head>
     <title>Kalkulator kredytowy</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
-</head>
-<body>
-
-<h2>Kalkulator kredytowy</h2>
-
-<form action="<?php print(_APP_URL); ?>/app/calc_credit.php" method="post" class="pure-form pure-form-stacked">
-    <label for="id_kwota">Kwota kredytu (PLN): </label>
-    <input id="id_kwota" type="text" name="kwota" value="<?php if(isset($kwota)) print($kwota); ?>" />
-
-    <label for="id_lata">Liczba lat: </label>
-    <input id="id_lata" type="text" name="lata" value="<?php if(isset($lata)) print($lata); ?>" />
-
-    <label for="id_oprocentowanie">Oprocentowanie roczne (%): </label>
-    <input id="id_oprocentowanie" type="text" name="oprocentowanie" value="<?php if(isset($oprocentowanie)) print($oprocentowanie); ?>" /> <br />
-
-    <input type="submit" value="Oblicz ratę" class="pure-button pure-button-primary"/>
-</form>
-
-<?php
-if (isset($messages) && count($messages) > 0) {
-    echo '<ol style="margin: 20px; padding: 10px; background-color: #f88; width:300px;">';
-    foreach ($messages as $msg) {
-        echo '<li>'.$msg.'</li>';
-    }
-    echo '</ol>';
-}
-?>
-
-<?php if (isset($result)) { ?>
-<div style="margin: 20px; padding: 10px; background-color: #ff0; width:300px;">
-    <?php echo 'Miesięczna rata: ' . $result . ' PLN'; ?>
-</div>
-<?php } ?>
-
-</body>
-
-<body class="is-preload">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="<?php print(_APP_URL); ?>/assets/css/main.css" />
+  </head>
+  <body class="is-preload">
     <!-- Wrapper -->
     <div id="wrapper">
       <!-- Main -->
@@ -49,21 +20,19 @@ if (isset($messages) && count($messages) > 0) {
         <div class="inner">
           <!-- Header -->
           <header id="header">
-            <a href="index.html" class="logo"
-              ><strong>Mój najlepszy kalkulator kredytowy</strong></a
-            >
+            <a href="<?php print(_APP_URL); ?>/index.php" class="logo">
+              <strong>Mój najlepszy kalkulator kredytowy</strong>
+            </a>
           </header>
 
           <!-- Content -->
           <section>
             <header class="main">
-              <h1>Kalkulator kretydowy</h1>
+              <h1>Kalkulator kredytowy</h1>
             </header>
 
             <!-- Form -->
-            <h3>Form</h3>
-
-            <form method="post" action="#">
+            <form action="<?php print(_APP_URL); ?>/app/calc_credit.php" method="post">
               <div class="row gtr-uniform">
                 <div class="col-12 col-12-xsmall">
                   <input
@@ -74,6 +43,7 @@ if (isset($messages) && count($messages) > 0) {
                     placeholder="Kwota kredytu (PLN)"
                   />
                 </div>
+
                 <div class="col-12 col-12-xsmall">
                   <input
                     type="text"
@@ -83,6 +53,7 @@ if (isset($messages) && count($messages) > 0) {
                     placeholder="Liczba lat"
                   />
                 </div>
+
                 <div class="col-12 col-12-xsmall">
                   <input
                     type="text"
@@ -93,21 +64,35 @@ if (isset($messages) && count($messages) > 0) {
                   />
                 </div>
 
-                <!-- Break -->
+                <!-- Przyciski -->
                 <div class="col-12">
                   <ul class="actions">
                     <li>
-                      <input
-                        type="submit"
-                        value="Oblicz"
-                        class="primary"
-                      />
+                      <input type="submit" value="Oblicz ratę" class="primary" />
                     </li>
                   </ul>
                 </div>
               </div>
-              <h2><br />Wynik</h2>
             </form>
+
+            <!-- Wyniki / Komunikaty -->
+            <?php
+            if (isset($messages) && count($messages) > 0) {
+                echo '<div style="margin-top: 20px; background-color: #f88; padding: 15px; border-radius: 10px;">';
+                echo '<h3>Błędy:</h3><ul>';
+                foreach ($messages as $msg) {
+                    echo '<li>'.$msg.'</li>';
+                }
+                echo '</ul></div>';
+            }
+            ?>
+
+            <?php if (isset($result)) { ?>
+            <div style="margin-top: 20px; background-color: #ff0; padding: 15px; border-radius: 10px;">
+              <h3>Wynik</h3>
+              <p><strong>Miesięczna rata:</strong> <?php echo $result; ?> PLN</p>
+            </div>
+            <?php } ?>
           </section>
         </div>
       </div>
@@ -121,17 +106,15 @@ if (isset($messages) && count($messages) > 0) {
               <h2>Menu</h2>
             </header>
             <ul>
-              <li><a href="index.html">Homepage</a></li>
-              <li><a href="generic.html">Generic</a></li>
-              <li><a href="elements.html">Elements</a></li>
-              <li>
+              <li><a href="<?php print(_APP_URL); ?>/index.php">Strona główna</a></li>
+              <li><a href="<?php print(_APP_URL); ?>/app/calc_view.php">Kalkulator</a></li>
             </ul>
           </nav>
+
           <!-- Footer -->
           <footer id="footer">
             <p class="copyright">
-              &copy; Untitled. All rights reserved. Demo Images:
-              <a href="https://unsplash.com">Unsplash</a>. Design:
+              &copy; Twoja aplikacja. Design:
               <a href="https://html5up.net">HTML5 UP</a>.
             </p>
           </footer>
@@ -140,10 +123,10 @@ if (isset($messages) && count($messages) > 0) {
     </div>
 
     <!-- Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="<?php print(_APP_URL); ?>/assets/js/jquery.min.js"></script>
+    <script src="<?php print(_APP_URL); ?>/assets/js/browser.min.js"></script>
+    <script src="<?php print(_APP_URL); ?>/assets/js/breakpoints.min.js"></script>
+    <script src="<?php print(_APP_URL); ?>/assets/js/util.js"></script>
+    <script src="<?php print(_APP_URL); ?>/assets/js/main.js"></script>
   </body>
 </html>

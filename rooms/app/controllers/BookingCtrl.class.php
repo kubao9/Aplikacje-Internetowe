@@ -13,24 +13,58 @@ class BookingCtrl {
         return $_SESSION['user'] ?? null;
     }
 
-    public function action_rooms() {
-        $me = $this->currentUser();
 
-        $rooms = App::getDB()->select('rooms', ['id','name','capacity'], ['ORDER' => ['name' => 'ASC']]);
+public function action_rooms() {
+    $me = $this->currentUser();
 
-        $resv = App::getDB()->query(
-            "SELECT r.id, r.room_id, rm.name AS room_name, r.start, r.end, r.user_id, u.username
-             FROM reservations r
-             JOIN rooms rm ON rm.id = r.room_id
-             JOIN users u  ON u.id  = r.user_id
-             ORDER BY r.start ASC"
-        )->fetchAll();
+    $perPage = 20;
 
-        App::getSmarty()->assign('me', $me);
-        App::getSmarty()->assign('rooms', $rooms);
-        App::getSmarty()->assign('reservations', $resv);
-        App::getSmarty()->display('BookingList.tpl');
-    }
+    // page z GET: /rooms?page=2
+    $v = new \core\Validator();
+    $page = $v->validateFromGet('page', [
+        'int' => true,
+        'min' => 1,
+        'validator_message' => 'Niepoprawny numer strony',
+        'message_type' => 'warning'
+    ]);
+    if (!$page) $page = 1;
+
+    $row = \core\App::getDB()->query("SELECT COUNT(*) AS c FROM reservations")->fetch();
+    $total = (int)($row['c'] ?? 0);
+
+    $totalPages = max(1, (int)ceil($total / $perPage));
+    if ($page > $totalPages) $page = $totalPages;
+
+    $offset = (int)(($page - 1) * $perPage);
+    $limit  = (int)$perPage;
+
+    $rooms = \core\App::getDB()->select('rooms', ['id','name','capacity'], ['ORDER' => ['name' => 'ASC']]);
+
+    $sql = "
+        SELECT r.id, r.room_id, rm.name AS room_name, r.start, r.end, r.user_id, u.username
+        FROM reservations r
+        JOIN rooms rm ON rm.id = r.room_id
+        JOIN users u  ON u.id  = r.user_id
+        ORDER BY r.start ASC
+        LIMIT $limit OFFSET $offset
+    ";
+    $resv = \core\App::getDB()->query($sql)->fetchAll();
+
+    $pages = range(1, $totalPages);
+
+    \core\App::getSmarty()->assign('me', $me);
+    \core\App::getSmarty()->assign('rooms', $rooms);
+    \core\App::getSmarty()->assign('reservations', $resv);
+
+    \core\App::getSmarty()->assign('page', $page);
+    \core\App::getSmarty()->assign('totalPages', $totalPages);
+    \core\App::getSmarty()->assign('total', $total);
+    \core\App::getSmarty()->assign('perPage', $perPage);
+    \core\App::getSmarty()->assign('pages', $pages);
+
+    \core\App::getSmarty()->display('BookingList.tpl');
+}
+
 
     public function action_reserve() {
         $me = $this->currentUser();

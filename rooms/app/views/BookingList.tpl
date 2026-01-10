@@ -1,4 +1,3 @@
-
 <html>
 <head>
   <meta charset="utf-8"/>
@@ -17,6 +16,15 @@
     form.res{display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end}
     input,select{padding:.4rem}
   {/literal}
+  
+  {literal}
+    .pager{display:flex;gap:.35rem;flex-wrap:wrap;margin:1rem 0;align-items:center}
+    .pager a,.pager span{border:1px solid #ddd;padding:.25rem .5rem;border-radius:6px;text-decoration:none}
+    .pager .current{background:#222;color:#fff;border-color:#222}
+    .pager .disabled{opacity:.5}
+    .pager-info{color:#666;margin:.25rem 0 1rem 0}
+  {/literal}
+
   </style>
 </head>
 <body>
@@ -87,5 +95,34 @@
       {/foreach}
     </tbody>
   </table>
+    
+{if $totalPages > 1}
+  <div class="pager">
+    {if $page > 1}
+      <a href="{rel_url action='rooms'}?page={$page-1}">« Poprzednia</a>
+    {else}
+      <span class="disabled">« Poprzednia</span>
+    {/if}
+
+    {foreach $pages as $p}
+      {if $p == $page}
+        <span class="current">{$p}</span>
+      {else}
+        <a href="{rel_url action='rooms'}?page={$p}">{$p}</a>
+      {/if}
+    {/foreach}
+
+    {if $page < $totalPages}
+      <a href="{rel_url action='rooms'}?page={$page+1}">Następna »</a>
+    {else}
+      <span class="disabled">Następna »</span>
+    {/if}
+  </div>
+
+  <div class="pager-info">
+    Strona {$page} z {$totalPages} · razem {$total} rezerwacji · na stronie {$perPage}
+  </div>
+{/if}
+
 </body>
 </html>
